@@ -2,8 +2,11 @@
 {
     Properties
     {
-        _color1 ("Color 1", Color) = (0,0,0,1)
-        _color2 ("Color 2", Color) = (1,0,0,1)
+        _amplitude ("amplitude", Float) = 0.05
+        _waveSpeed ("waveSpeed", Float) = 10.0
+        _frequency ("frequency", Float) = 100.0
+        _color1 ("brightSpots", Color) = (0,0,0,1)
+        _color2 ("darkSpots", Color) = (1,0,0,1)
         _octaves ("Octaves", Int) = 4
     }
     SubShader
@@ -22,6 +25,7 @@
             #include "UnityCG.cginc"
 
             float4 _color1, _color2;
+            float _amplitude, _waveSpeed, _frequency;
             int _octaves;
 
             float hash (float2 n)
@@ -73,8 +77,18 @@
 
             v2f vert (appdata v)
             {
+
+                float3 position = v.vertex.xyz;
+                float3 direction = normalize(position);
+
+                //waves with sinus / cosinus frequency on surface
+                position.x += direction.x * _amplitude * sin(_Time * _waveSpeed + position.x * _frequency);
+                position.y += direction.y * _amplitude * cos(_Time * _waveSpeed + position.y * _frequency);
+                position.z += direction.z * _amplitude * sin(_Time * _waveSpeed + position.z * _frequency);
+
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                //new position for o.vertex
+                o.vertex = UnityObjectToClipPos(float4(position, 1.0));
                 o.uv = v.uv;
 
                 return o;
