@@ -2,11 +2,9 @@
 {
     Properties
     {
-        _amplitude ("amplitude", Float) = 0.01
-        _waveSpeed ("waveSpeed", Float) = 5.0
-        _frequency ("frequency", Float) = 40.0
-        _color1 ("brightSpots", Color) = (0,0,0,1)
-        _color2 ("darkSpots", Color) = (1,0,0,1)
+        _amplitude ("Displacement", Float) = 0.01
+        _color1 ("Bright Color", Color) = (0,0,0,1)
+        _color2 ("Dark Color", Color) = (1,0,0,1)
         _octaves ("Octaves", Int) = 4
     }
     SubShader
@@ -77,21 +75,18 @@
 
             v2f vert (appdata v)
             {
-                float2 pos2 = v.vertex.xy;
                 float3 position = v.vertex.xyz;
                 float3 direction = normalize(position);
 
-                //waves using noise
-                position.x += direction.x * _amplitude * noise(_Time * _waveSpeed + pos2 * _frequency);
-                position.y += direction.y * _amplitude * noise(_Time * _waveSpeed + pos2 * _frequency);
-
-                //waves (old, with sinus/cosinus)
-                //position.x += direction.x * _amplitude * sin(_Time * _waveSpeed + position.x * _frequency);
-                //position.y += direction.y * _amplitude * cos(_Time * _waveSpeed + position.y * _frequency);
-                //position.z += direction.z * _amplitude * sin(_Time * _waveSpeed + position.z * _frequency);
+                // Calculate heightmap using FBM like in the fragment shader.
+                // Based on the resulting FBM texture, vertices will be
+                // displaced. Darker regions are nearer the center while
+                // brighter regions are more far away from the center
+                // (displacement).
+                float f = fbm(v.uv + fbm(5 * v.uv + _Time.x, _octaves), _octaves);
+                position -= direction * f * _amplitude;
 
                 v2f o;
-                //new position for o.vertex
                 o.vertex = UnityObjectToClipPos(float4(position, 1.0));
                 o.uv = v.uv;
 
