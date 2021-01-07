@@ -2,9 +2,9 @@
 {
     Properties
     {
-        _amplitude ("amplitude", Float) = 0.05
-        _waveSpeed ("waveSpeed", Float) = 10.0
-        _frequency ("frequency", Float) = 100.0
+        _amplitude ("amplitude", Float) = 0.01
+        _waveSpeed ("waveSpeed", Float) = 5.0
+        _frequency ("frequency", Float) = 40.0
         _color1 ("brightSpots", Color) = (0,0,0,1)
         _color2 ("darkSpots", Color) = (1,0,0,1)
         _octaves ("Octaves", Int) = 4
@@ -77,14 +77,18 @@
 
             v2f vert (appdata v)
             {
-
+                float2 pos2 = v.vertex.xy;
                 float3 position = v.vertex.xyz;
                 float3 direction = normalize(position);
 
-                //waves with sinus / cosinus frequency on surface
-                position.x += direction.x * _amplitude * sin(_Time * _waveSpeed + position.x * _frequency);
-                position.y += direction.y * _amplitude * cos(_Time * _waveSpeed + position.y * _frequency);
-                position.z += direction.z * _amplitude * sin(_Time * _waveSpeed + position.z * _frequency);
+                //waves using noise
+                position.x += direction.x * _amplitude * noise(_Time * _waveSpeed + pos2 * _frequency);
+                position.y += direction.y * _amplitude * noise(_Time * _waveSpeed + pos2 * _frequency);
+
+                //waves (old, with sinus/cosinus)
+                //position.x += direction.x * _amplitude * sin(_Time * _waveSpeed + position.x * _frequency);
+                //position.y += direction.y * _amplitude * cos(_Time * _waveSpeed + position.y * _frequency);
+                //position.z += direction.z * _amplitude * sin(_Time * _waveSpeed + position.z * _frequency);
 
                 v2f o;
                 //new position for o.vertex
