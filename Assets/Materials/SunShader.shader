@@ -2,7 +2,7 @@
 {
     Properties
     {
-        _amplitude ("Displacement", Float) = 0.01
+        _displacement ("Displacement", Float) = 0.01
         _color1 ("Bright Color", Color) = (0,0,0,1)
         _color2 ("Dark Color", Color) = (1,0,0,1)
         _octaves ("Octaves", Int) = 4
@@ -23,7 +23,7 @@
             #include "UnityCG.cginc"
 
             float4 _color1, _color2;
-            float _amplitude, _waveSpeed, _frequency;
+            float _displacement;
             int _octaves;
 
             float hash (float2 n)
@@ -84,7 +84,7 @@
                 // brighter regions are more far away from the center
                 // (displacement).
                 float f = fbm(v.uv + fbm(5 * v.uv + _Time.x, _octaves), _octaves);
-                position -= direction * f * _amplitude;
+                position -= direction * f * _displacement;
 
                 v2f o;
                 o.vertex = UnityObjectToClipPos(float4(position, 1.0));

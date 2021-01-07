@@ -73,10 +73,11 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     - _a: -10
-    - _amplitude: 0.01
+    - _amplitude: 0.05
     - _b: -1.47
     - _c: 3.42
     - _d: -9.89
+    - _displacement: 0.04
     - _e: 5.67
     - _f: -6.83
     - _frequency: 40
