@@ -20,8 +20,6 @@
             // make fog work
             #pragma multi_compile_fog
 
-            #include "UnityCG.cginc"
-
             float4 _color1, _color2;
             float _displacement;
             int _octaves;
@@ -60,6 +58,11 @@
                 return value;
             }
 
+            float texturex(float2 uv)
+            {
+              return fbm(uv + fbm(5 * uv + _Time.x, _octaves), _octaves);
+            }
+
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -68,38 +71,33 @@
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+                float2 uv : TEXCOORD0;
             };
 
             v2f vert (appdata v)
             {
-                float3 position = v.vertex.xyz;
-                float3 direction = normalize(position);
+              float3 position = v.vertex.xyz;
+              float3 direction = normalize(position);
 
-                // Calculate heightmap using FBM like in the fragment shader.
-                // Based on the resulting FBM texture, vertices will be
-                // displaced. Darker regions are nearer the center while
-                // brighter regions are more far away from the center
-                // (displacement).
-                float f = fbm(v.uv + fbm(5 * v.uv + _Time.x, _octaves), _octaves);
-                position -= direction * f * _displacement;
+              // Calculate heightmap using FBM like in the fragment shader.
+              // Based on the resulting FBM texture, vertices will be
+              // displaced. Darker regions are nearer the center while
+              // brighter regions are more far away from the center
+              // (displacement).
+              position += direction * texturex(v.uv) * _displacement;
 
-                v2f o;
-                o.vertex = UnityObjectToClipPos(float4(position, 1.0));
-                o.uv = v.uv;
+              v2f o;
+              o.vertex = UnityObjectToClipPos(float4(position, 1.0));
+              o.uv = v.uv;
 
-                return o;
+              return o;
             }
 
             float4 frag (v2f i) : SV_Target
             {
-              float2 uv = i.uv.xy;
-
-              float f = fbm(uv + fbm(5 * uv + _Time.x, _octaves), _octaves);
-              float4 color = lerp(_color1, _color2, 2*f);
-
+              float texColor = texturex(i.uv);
+              float4 color = lerp(_color1, _color2, 2.0 * texColor);
               return color;
             }
             ENDCG
