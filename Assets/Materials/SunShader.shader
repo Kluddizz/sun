@@ -17,10 +17,9 @@
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
-            float4 _color1, _color2;
+            float4 _color1;
+            float4 _color2;
             float _displacement;
             int _octaves;
 
