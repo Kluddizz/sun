@@ -58,7 +58,7 @@
                 return value;
             }
 
-            float texturex(float2 uv)
+            float sunTexture(float2 uv)
             {
               return fbm(uv + fbm(5 * uv + _Time.x, _octaves), _octaves);
             }
@@ -85,7 +85,7 @@
               // displaced. Darker regions are nearer the center while
               // brighter regions are more far away from the center
               // (displacement).
-              position += direction * texturex(v.uv) * _displacement;
+              position += direction * sunTexture(v.uv) * _displacement;
 
               v2f o;
               o.vertex = UnityObjectToClipPos(float4(position, 1.0));
@@ -96,7 +96,7 @@
 
             float4 frag (v2f i) : SV_Target
             {
-              float texColor = texturex(i.uv);
+              float texColor = sunTexture(i.uv);
               float4 color = lerp(_color1, _color2, 2.0 * texColor);
               return color;
             }
