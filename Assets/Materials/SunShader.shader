@@ -2,8 +2,9 @@
 {
     Properties
     {
-        _color1 ("Color 1", Color) = (0,0,0,1)
-        _color2 ("Color 2", Color) = (1,0,0,1)
+        _displacement ("Displacement", Float) = 0.01
+        _color1 ("Bright Color", Color) = (0,0,0,1)
+        _color2 ("Dark Color", Color) = (1,0,0,1)
         _octaves ("Octaves", Int) = 4
     }
     SubShader
@@ -16,12 +17,10 @@
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
-            #include "UnityCG.cginc"
-
-            float4 _color1, _color2;
+            float4 _color1;
+            float4 _color2;
+            float _displacement;
             int _octaves;
 
             float hash (float2 n)
@@ -58,6 +57,11 @@
                 return value;
             }
 
+            float sunTexture(float2 uv)
+            {
+              return fbm(uv + fbm(5 * uv + _Time.x, _octaves), _octaves);
+            }
+
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -66,27 +70,33 @@
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+                float2 uv : TEXCOORD0;
             };
 
             v2f vert (appdata v)
             {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;
+              float3 position = v.vertex.xyz;
+              float3 direction = normalize(position);
 
-                return o;
+              // Calculate heightmap using FBM like in the fragment shader.
+              // Based on the resulting FBM texture, vertices will be
+              // displaced. Darker regions are nearer the center while
+              // brighter regions are more far away from the center
+              // (displacement).
+              position += direction * sunTexture(v.uv) * _displacement;
+
+              v2f o;
+              o.vertex = UnityObjectToClipPos(float4(position, 1.0));
+              o.uv = v.uv;
+
+              return o;
             }
 
             float4 frag (v2f i) : SV_Target
             {
-              float2 uv = i.uv.xy;
-
-              float f = fbm(uv + fbm(5 * uv + _Time.x, _octaves), _octaves);
-              float4 color = lerp(_color1, _color2, 2*f);
-
+              float texColor = sunTexture(i.uv);
+              float4 color = lerp(_color1, _color2, 2.0 * texColor);
               return color;
             }
             ENDCG
