@@ -78,8 +78,10 @@ Material:
     - _c: 3.42
     - _d: -9.89
     - _displacement: 0.04
-    - _e: 5.67
+    - _e: 3
     - _f: -6.83
+    - _fbmAmplitude: 0.45
+    - _fbmGranularity: 3
     - _frequency: 40
     - _g: 7.48
     - _h: 8.32

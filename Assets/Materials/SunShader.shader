@@ -2,10 +2,15 @@
 {
     Properties
     {
-        _displacement ("Displacement", Float) = 0.01
-        _color1 ("Bright Color", Color) = (0,0,0,1)
-        _color2 ("Dark Color", Color) = (1,0,0,1)
-        _octaves ("Octaves", Int) = 4
+      [Header(Fractal Brownian Motion)][Space]
+      _fbmAmplitude ("Amplitude", Float) = 0.45
+      _fbmGranularity ("Granularity", Float) = 4.0
+
+      [Header(Procedural Texture)][Space]
+      _displacement ("Displacement", Float) = 0.01
+      _color1 ("Bright Color", Color) = (0,0,0,1)
+      _color2 ("Dark Color", Color) = (1,0,0,1)
+      _octaves ("Octaves", Int) = 4
     }
     SubShader
     {
@@ -21,6 +26,8 @@
             float4 _color1;
             float4 _color2;
             float _displacement;
+            float _fbmAmplitude;
+            float _fbmGranularity;
             int _octaves;
 
             float hash (float2 n)
@@ -43,8 +50,8 @@
             float fbm(float2 p , int octaves)
             {
                 float value = 0.0;
-                float amplitude = 0.45;
-                float e = 4.0;
+                float amplitude = _fbmAmplitude;
+                float e = _fbmGranularity;
 
                 for (int i = 0; i < octaves; i++)
                 {
@@ -84,7 +91,7 @@
               // displaced. Darker regions are nearer the center while
               // brighter regions are more far away from the center
               // (displacement).
-              position += direction * sunTexture(v.uv) * _displacement;
+              position -= direction * sunTexture(v.uv) * _displacement;
 
               v2f o;
               o.vertex = UnityObjectToClipPos(float4(position, 1.0));
