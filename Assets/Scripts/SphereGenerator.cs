@@ -24,7 +24,7 @@ public class SphereGenerator : MonoBehaviour
   void OnDrawGizmos()
   {
     Gizmos.color = new Color(0, 0, 0, 0.5f);
-    Mesh mesh = MeshGenerator.GenerateIcoSphereMesh(recursionLevel, radius);
+    Mesh mesh = MeshGenerator.GenerateIcoSphereMesh(3, radius);
     Gizmos.DrawWireMesh(mesh, 0, transform.position, Quaternion.identity, Vector3.one * radius);
   }
 }
