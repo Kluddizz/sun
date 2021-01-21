@@ -77,7 +77,7 @@ Material:
     - _b: -1.47
     - _c: 3.42
     - _d: -9.89
-    - _displacement: 0.0015
+    - _displacement: 0.005
     - _e: 3
     - _f: -6.83
     - _fbmAmplitude: 4.72

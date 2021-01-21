@@ -103,7 +103,7 @@
             float4 frag (v2f i) : SV_Target
             {
               float texColor = sunTexture(i.uv);
-              float4 color = lerp(_color1, _color2, 2.0 * texColor);
+              float4 color = lerp(_color1, _color2, 4.0 * texColor);
               return color;
             }
             ENDCG
