@@ -10,32 +10,29 @@ public class FlareSpawner : MonoBehaviour
   public float radius = 1.0f;
   public float delaySeconds;
   public float skipDelayForParticles;
-  public VisualEffect flareEffect;
+  public GameObject flarePrefab;
 
   private List<Vector3> positions = new List<Vector3>();
 
   void Start()
   {
-        delaySeconds = 0.1f;
-        skipDelayForParticles = 50;
-        StartCoroutine(SpawnParticles());
+      delaySeconds = 0.5f;
+      StartCoroutine(SpawnParticles());
   }
 
   IEnumerator SpawnParticles()
     {
-        positions = FibonacciSphere.GeneratePoints(numberFlares, radius);
+        positions = FibonacciSphere.GeneratePoints(numberFlares, radius - 0.025f);
         float currentFlares = 0f;
 
         foreach (Vector3 p in positions)
         {
             currentFlares++;
-            Quaternion rotation = Quaternion.LookRotation(p, Vector3.up);
-            VisualEffect effect = Object.Instantiate<VisualEffect>(flareEffect, p, rotation);
+            Quaternion rotation = Quaternion.LookRotation(-p, Vector3.up);
+            GameObject flareInstance = GameObject.Instantiate(flarePrefab, p, rotation);
+            flareInstance.transform.parent = gameObject.transform;
 
-            if (currentFlares >= skipDelayForParticles)
-            {
-                yield return new WaitForSeconds(delaySeconds);
-            }
+            yield return new WaitForSeconds(delaySeconds);
         }
     }
   void OnDrawGizmos()
