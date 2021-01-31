@@ -656,7 +656,7 @@ MonoBehaviour:
   width: 1
   height: 1
   depth: 1
-  numberVectorsPerDimension: 256
+  numberVectorsPerDimension: 64
   positivePole:
     position: {x: 0.5, y: 0, z: 0}
     type: 0
