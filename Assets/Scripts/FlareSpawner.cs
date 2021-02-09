@@ -9,7 +9,6 @@ public class FlareSpawner : MonoBehaviour
   public int numberFlares = 10;
   public float radius = 1.0f;
   public float delaySeconds;
-  public float skipDelayForParticles;
   public GameObject flarePrefab;
 
   private List<Vector3> positions = new List<Vector3>();
