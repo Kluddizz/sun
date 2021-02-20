@@ -134,18 +134,17 @@
 
             float4 frag(v2f i) : SV_Target
             {
-              float texColor;
+              float farTexColor = 0.0;
+              float texColor = 0.0;
 
-              if (_ZoomVal > 0.15)
+              if (_ZoomVal >= 0.1)
               {
-                texColor = sunTexture(i.uv);
+                  texColor = sunTexture(i.uv);
               }
-              if (_ZoomVal < 0.5)
+              if (_ZoomVal <= 0.2)
               {
-                float tempTex = texColor;
-
                 float2 scale = i.uv * 0.755;
-
+                farTexColor = texColor;
                 texColor = nearSunTexture(scale += 1.0);
 
                 for (float j = 1.0; j < _octaves; j++)
@@ -156,11 +155,14 @@
 
                 texColor = pow(texColor, 1.5);
 
-                /*if (_ZoomVal > 0.15) 
-                {
-                    float scalar = -ZoomVal;
-                }*/
+                  if (_ZoomVal > 0.1 && _ZoomVal < 0.2)
+                  {
+                      float scalar = (_ZoomVal - 0.1) / 0.1;
+
+                      texColor = lerp(texColor, farTexColor, scalar);
+                  }
               }
+
 
               float4 color = lerp(_color1, _color2, 3.0 * texColor);;
               return color;

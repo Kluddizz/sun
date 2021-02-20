@@ -1,36 +1,35 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class CameraMovement : MonoBehaviour
 {
 
-    private Camera cam;
-    [SerializeField] private float targetZoom;
-    public float zoomFactor = 1f;
-    private float upperBounds = 100f;
-    private float lowerBounds = 0.1f;
-    public float zoomSpeed = 5;
+    public Transform near;
+    public Transform far;
+
+    private float zoom = 1;
+    public float zoomSpeed = 30f;
     public Material sunMaterial;
 
     // Start is called before the first frame update
     void Start()
     {
-        cam = Camera.main;
-        targetZoom = cam.orthographicSize;
+        transform.position = far.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float scrollData;
-        scrollData = Input.GetAxis("Mouse ScrollWheel");
-        targetZoom -= scrollData * zoomFactor;
-        targetZoom = Mathf.Clamp(targetZoom, lowerBounds, upperBounds);
-        cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetZoom, Time.deltaTime * zoomSpeed);
+        zoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
+        zoom = Mathf.Clamp(zoom, 0f, 1f);
+        transform.position = Vector3.Slerp(near.position, far.position, zoom);
 
-        sunMaterial.SetFloat("_ZoomVal", targetZoom);
+        sunMaterial.SetFloat("_ZoomVal", zoom);
     }
+
+    
 }

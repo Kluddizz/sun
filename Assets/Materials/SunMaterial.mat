@@ -72,6 +72,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
+    - _ZoomVal: 1
     - _a: -10
     - _amplitude: 0.05
     - _b: -1.47
