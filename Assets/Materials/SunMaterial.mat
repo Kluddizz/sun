@@ -78,7 +78,7 @@ Material:
     - _b: -1.47
     - _c: 3.42
     - _d: -9.89
-    - _displacement: 0.002
+    - _displacement: 0.0005
     - _e: 3
     - _f: -6.83
     - _fbmAmplitude: 4.72
@@ -93,6 +93,6 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _color1: {r: 0, g: 0, b: 0, a: 1}
     - _color2: {r: 1, g: 0.3151409, b: 0, a: 1}
-    - _color3: {r: 1, g: 0, b: 0, a: 1}
-    - _color4: {r: 1, g: 0.7401557, b: 0, a: 1}
+    - _color3: {r: 0, g: 0, b: 0, a: 1}
+    - _color4: {r: 1, g: 0.5254831, b: 0, a: 1}
   m_BuildTextureStacks: []

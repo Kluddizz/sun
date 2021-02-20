@@ -401,7 +401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c747a0cf46d37b48a2c347fae47ef99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recursionLevel: 5
+  recursionLevel: 6
   radius: 0.5
   material: {fileID: 2100000, guid: 3acd3c42f38e42341b732408d7e2f4cf, type: 2}
 --- !u!1 &963194225

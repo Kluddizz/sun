@@ -10,6 +10,8 @@
       _displacement("Displacement", Float) = 0.01
       _color1("Bright Color", Color) = (0,0,0,1)
       _color2("Dark Color", Color) = (1,0,0,1)
+      _color3("Bright Color 2", Color) = (0,0,0,1)
+      _color4("Dark Color 2", Color) = (1,0,0,1)
       _octaves("Octaves", Int) = 4
 
       _ZoomVal("ZoomValue", Float) = 5.0
@@ -27,6 +29,8 @@
 
             float4 _color1;
             float4 _color2;
+            float4 _color3;
+            float4 _color4;
             float _displacement;
             float _fbmAmplitude;
             float _fbmGranularity;
@@ -72,10 +76,9 @@
               return fbm(uv + fbm(5 * uv + _Time.x, _octaves), _octaves);
             }
 
-            float4 nearSunTexture(float2 uv)
+            float4 nearSunTexture(float2 iuv)
             {
-                //float cellNum = 100.0;
-
+                float2 uv = iuv * 250;
                 float2 i = floor(uv);
                 float2 f = frac(uv);
                 float3 col = (f).xyy;
@@ -88,8 +91,9 @@
                     {
                         float2 n = float2(float(x), float(y));
                         float2 p = noise(i + n);
-                        p.y = 0.5 + 0.5 * sin(_Time + 5. * p.y);
-                        p.x = 0.5 + 0.5 * cos(_Time + 5. * p.x);
+                        // p.y = 0.5 + 0.5 * sin(_Time + 5. * p.y);
+                        // p.x = 0.5 + 0.5 * cos(_Time + 5. * p.x);
+                        p = 0.5 + 0.5 * sin(_Time + 6.2831 * p);
 
                         float2 diff = n + p - f;
                         float dist = length(diff);
@@ -100,6 +104,32 @@
 
                 return minDist;
             }
+
+            float remap(float value, float min1, float max1, float min2, float max2)
+            {
+                return (value - min1) * (max2 - min2) / (max1 - min1) + min2;
+            }
+
+            float sunTex(float2 uv)
+            {
+              float cellular = 1.0 / pow(nearSunTexture(uv) + 0.4, 3);
+              float fbm = 3.0 * sunTexture(uv);
+
+              float value = 0.0;
+
+              if (_ZoomVal <= 0.2)
+              {
+                  float x = remap(_ZoomVal, 0.0, 0.2, 0.0, 1.0);
+                  value = lerp(cellular, fbm, x);
+              }
+              else
+              {
+                  value = fbm;
+              }
+
+              return value;
+            }
+
 
             struct appdata
             {
@@ -123,7 +153,7 @@
               // displaced. Darker regions are nearer the center while
               // brighter regions are more far away from the center
               // (displacement).
-              position -= direction * sunTexture(v.uv) * _displacement;
+              position -= direction * sunTex(v.uv) * _displacement;
 
               v2f o;
               o.vertex = UnityObjectToClipPos(float4(position, 1.0));
@@ -134,39 +164,11 @@
 
             float4 frag(v2f i) : SV_Target
             {
-              float farTexColor = 0.0;
-              float texColor = 0.0;
-
-              if (_ZoomVal >= 0.1)
-              {
-                  texColor = sunTexture(i.uv);
-              }
-              if (_ZoomVal <= 0.2)
-              {
-                float2 scale = i.uv * 0.755;
-                farTexColor = texColor;
-                texColor = nearSunTexture(scale += 1.0);
-
-                for (float j = 1.0; j < _octaves; j++)
-                {
-                    texColor += nearSunTexture(scale += 1.0) / j;
-                    scale *= _octaves;
-                }
-
-                texColor = pow(texColor, 1.5);
-
-                  if (_ZoomVal > 0.1 && _ZoomVal < 0.2)
-                  {
-                      float scalar = (_ZoomVal - 0.1) / 0.1;
-
-                      texColor = lerp(texColor, farTexColor, scalar);
-                  }
-              }
-
-
-              float4 color = lerp(_color1, _color2, 3.0 * texColor);;
-              return color;
+                float texColor = sunTex(i.uv);
+                float4 color = lerp(_color1, _color2, texColor);
+                return color;
             }
+            
             ENDCG
         }
     }
