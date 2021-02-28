@@ -6,21 +6,21 @@ using UnityEngine;
 
 public class FlareSpawner : MonoBehaviour
 {
-  public int numberFlares = 10;
-  public float radius = 1.0f;
-  public float delaySeconds;
-  public float skipDelayForParticles;
-  public GameObject flarePrefab;
+    public int numberFlares = 10;
+    public float radius = 1.0f;
+    public float delaySeconds;
+    public float skipDelayForParticles;
+    public GameObject flarePrefab;
 
-  private List<Vector3> positions = new List<Vector3>();
+    private List<Vector3> positions = new List<Vector3>();
 
-  void Start()
-  {
-      delaySeconds = 0.5f;
-      StartCoroutine(SpawnParticles());
-  }
+    void Start()
+    {
+        delaySeconds = 0.5f;
+        StartCoroutine(SpawnParticles());
+    }
 
-  IEnumerator SpawnParticles()
+    IEnumerator SpawnParticles()
     {
         positions = FibonacciSphere.GeneratePoints(numberFlares, radius - 0.025f);
         float currentFlares = 0f;
@@ -29,21 +29,26 @@ public class FlareSpawner : MonoBehaviour
         {
             currentFlares++;
             Quaternion rotation = Quaternion.LookRotation(-p, Vector3.up);
-            GameObject flareInstance = GameObject.Instantiate(flarePrefab, p, rotation);
+            GameObject flareInstance = Instantiate(flarePrefab, p, rotation);
             flareInstance.transform.parent = gameObject.transform;
 
             yield return new WaitForSeconds(delaySeconds);
         }
     }
-  void OnDrawGizmos()
-  {
-    List<Vector3> positions = new List<Vector3>();
-    positions = FibonacciSphere.GeneratePoints(numberFlares, radius);
 
-    foreach (Vector3 v in positions)
+    void OnDrawGizmos()
     {
-      Gizmos.color = Color.red;
-      Gizmos.DrawSphere(v, 0.01f);
+        List<Vector3> positions = FibonacciSphere.GeneratePoints(numberFlares, radius);
+
+        foreach (Vector3 v in positions)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(v, 0.01f);
+        }
     }
-  }
+
+    void Update()
+    {
+        transform.RotateAround(Vector3.zero, Vector3.up, -5.0f * Time.deltaTime);
+    }
 }

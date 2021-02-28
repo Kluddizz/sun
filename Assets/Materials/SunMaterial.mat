@@ -78,21 +78,24 @@ Material:
     - _b: -1.47
     - _c: 3.42
     - _d: -9.89
-    - _displacement: 0.0005
+    - _displacement: 0.001
     - _e: 3
     - _f: -6.83
-    - _fbmAmplitude: 4.72
+    - _fbmAmplitude: 3.55
+    - _fbmFrequency: 9.72
+    - _fbmGain: 0.7
     - _fbmGranularity: 3.77
+    - _fbmLacunarity: 1.58
     - _frequency: 40
     - _g: 7.48
     - _h: 8.32
-    - _octaves: 8
+    - _octaves: 16
     - _waveSpeed: 5
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _color1: {r: 0, g: 0, b: 0, a: 1}
-    - _color2: {r: 1, g: 0.3151409, b: 0, a: 1}
+    - _color2: {r: 0.6509434, g: 0.25128153, b: 0, a: 1}
     - _color3: {r: 0, g: 0, b: 0, a: 1}
-    - _color4: {r: 1, g: 0.5254831, b: 0, a: 1}
+    - _color4: {r: 1, g: 0.72337544, b: 0, a: 1}
   m_BuildTextureStacks: []

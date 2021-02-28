@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/FibonacciScene.unity
+    guid: 07fbb53091c8b8141b85cd2b824d495b
   m_configObjects: {}

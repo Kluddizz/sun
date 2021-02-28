@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Source: https://answers.unity.com/questions/1257281/how-to-rotate-camera-orbit-around-a-game-object-on.html
 public class DragMouseOrbit : MonoBehaviour
 {
     public Transform target;
@@ -15,13 +16,14 @@ public class DragMouseOrbit : MonoBehaviour
     float rotationXAxis = 0.0f;
     float velocityX = 0.0f;
     float velocityY = 0.0f;
-    // Use this for initialization
+
     void Start()
     {
         Vector3 angles = transform.eulerAngles;
         rotationYAxis = angles.y;
         rotationXAxis = angles.x;
     }
+
     void LateUpdate()
     {
         if (target)
@@ -31,9 +33,11 @@ public class DragMouseOrbit : MonoBehaviour
                 velocityX += xSpeed * Input.GetAxis("Mouse X") * distance * 0.02f;
                 velocityY -= ySpeed * Input.GetAxis("Mouse Y") * 0.02f;
             }
+
             rotationYAxis += velocityX;
             rotationXAxis -= velocityY;
             rotationXAxis = ClampAngle(rotationXAxis, yMinLimit, yMaxLimit);
+
             Quaternion toRotation = Quaternion.Euler(rotationXAxis, rotationYAxis, 0);
             Quaternion rotation = toRotation;
 
@@ -42,6 +46,7 @@ public class DragMouseOrbit : MonoBehaviour
             velocityY = Mathf.Lerp(velocityY, 0, Time.deltaTime * smoothTime);
         }
     }
+
     public static float ClampAngle(float angle, float min, float max)
     {
         if (angle < -360F)

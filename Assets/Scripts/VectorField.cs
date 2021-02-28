@@ -83,9 +83,9 @@ public class VectorField : MonoBehaviour
                 for (int x = 0; x < dimensions.x; x++)
                 {
                     Vector3 position = new Vector3(
-                        (-0.5f + x * stepX) * width,
-                        (-0.5f + y * stepY) * height,
-                        (-0.5f + z * stepZ) * depth
+                        (-width/2 + x * stepX) * width,
+                        (-height/2 + y * stepY) * height,
+                        (-depth/2 + z * stepZ) * depth
                     );
 
                     Vector3 magneticForce = GetMagneticDirection(position);
@@ -159,10 +159,11 @@ public class VectorField : MonoBehaviour
 
     void DrawVectorGizmos()
     {
-        FieldVector[,,] vectors = InitializeVectors(new Vector3Int(10, 10, 10));
+        FieldVector[,,] vectors = InitializeVectors(new Vector3Int(15, 15, 15));
 
         foreach (FieldVector v in vectors) {
-            Gizmos.color = Color.Lerp(new Color(0.0f, 1.0f, 0.0f), new Color(1.0f, 0.0f, 0.0f), v.strength * 1000.0f * strengthFactor);
+            // Gizmos.color = Color.Lerp(new Color(0.0f, 1.0f, 0.0f), new Color(1.0f, 0.0f, 0.0f), v.strength * 1000.0f * strengthFactor);
+            Gizmos.color = new Color(v.direction.x, v.direction.y, v.direction.z);
             DrawArrowGizmo(v.position, v.direction, 0.05f);
         }
     }
